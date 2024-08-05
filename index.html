@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valorant VP Generator</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f1923, #1c2b39);
+            color: #ece8e1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(31, 41, 55, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            width: 600px;
+            animation: fadeInContainer 1s ease-in-out;
+            transition: background-color 0.3s;
+        }
+
+        @keyframes fadeInContainer {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            color: #fa4454;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7), 0 0 10px #fa4454, 0 0 20px #fa4454; }
+            to { text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7), 0 0 20px #fa4454, 0 0 40px #fa4454; }
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.2em;
+            color: #ece8e1;
+            background-color: #fa4454;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #e03a46;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(250, 68, 84, 0.7);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        input[type="password"] {
+            padding: 10px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            border: 2px solid #fa4454;
+            border-radius: 8px;
+            background-color: rgba(31, 41, 55, 0.7);
+            color: #ece8e1;
+            width: calc(100% - 24px);
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="password"]:focus {
+            border-color: #e03a46;
+            box-shadow: 0 0 8px rgba(250, 68, 84, 0.7);
+            outline: none;
+        }
+
+        .code-container {
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 1.5em;
+            color: #fa4454;
+            border: 2px dashed #fa4454;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+            transition: all 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .code {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: rgba(250, 68, 84, 0.1);
+            border-radius: 5px;
+            animation: slideIn 0.5s ease-in-out;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .code button {
+            padding: 5px 10px;
+            font-size: 1em;
+            color: #ece8e1;
+            background-color: #1c2b39;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .code button:hover {
+            background-color: #e03a46;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            font-size: 1.5em;
+            color: #fa4454;
+            display: none;
+        }
+
+        .loading:before {
+            content: "";
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            margin-right: 0.5em;
+            animation: spinner 0.6s linear infinite;
+        }
+
+        @keyframes spinner {
+            to { transform: rotate(360deg); }
+        }
+
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .error {
+            background-color: #fa4454;
+            color: #1f2937;
+        }
+
+        .success {
+            background-color: #4caf50;
+            color: #ece8e1;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            font-size: 1.2em;
+            color: #ece8e1;
+            background-color: #fa4454;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background-color: #e03a46;
+        }
+
+        .confirmed {
+            margin-left: 10px;
+            color: #4caf50;
+            font-size: 1.2em;
+        }
+
+    </style>
+</head>
+<body>
+    <button id="themeToggle" class="theme-toggle">made by @c4gwn</button>
+    <div class="container">
+        <h1>Valorant VP Generator</h1>
+        <input type="password" id="keyInput" placeholder="Enter key">
+        <button id="verifyBtn">Verify Key</button>
+        <div id="authContainer" class="hidden">
+            <button id="generateBtn">Generate VP Code</button>
+            <button id="generateMultipleBtn">Generate 5 VP Codes</button>
+        </div>
+        <div id="loading" class="loading">Generating...</div>
+        <div id="codesContainer" class="code-container"></div>
+        <div id="message" class="message"></div>
+    </div>
+    <script>
+        const validKey = '$PYROLW-300FM2-SAKC9-39FK-DK3-M3-3#1YEAR';
+
+        document.getElementById('verifyBtn').addEventListener('click', function() {
+            const key = document.getElementById('keyInput').value;
+            const message = document.getElementById('message');
+            if (key === validKey) {
+                document.getElementById('authContainer').classList.remove('hidden');
+                document.getElementById('keyInput').classList.add('hidden');
+                document.getElementById('verifyBtn').classList.add('hidden');
+                message.textContent = 'Key verified successfully!';
+                message.className = 'message success';
+                message.style.display = 'block';
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 3000);
+            } else {
+                message.textContent = 'Invalid key. Please try again.';
+                message.className = 'message error';
+                message.style.display = 'block';
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            generateCodes(1);
+        });
+
+        document.getElementById('generateMultipleBtn').addEventListener('click', function() {
+            generateCodes(5);
+        });
+
+        function generateCodes(count) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const values = [115, 150, 600, 1200, 2200, 3500, 7300];
+            const length = 16;
+            const codesContainer = document.getElementById('codesContainer');
+            const loading = document.getElementById('loading');
+
+            codesContainer.innerHTML = '';
+            loading.style.display = 'block';
+
+            setTimeout(() => {
+                for (let j = 0; j < count; j++) {
+                    let result = 'RA-';
+                    for (let i = 0; i < length; i++) {
+                        const char = characters.charAt(Math.floor(Math.random() * characters.length));
+                        if (i === 0 && !isNaN(char)) {
+                            i--; // ilk karakter rakam olursa, tekrar dene
+                        } else {
+                            result += char;
+                        }
+                    }
+                    const value = values[Math.floor(Math.random() * values.length)];
+                    const isConfirmed = Math.random() < 0.02;
+                    const codeElement = document.createElement('div');
+                    codeElement.className = 'code';
+                    codeElement.innerHTML = `${result} - ${value}VP <button onclick="copyCode('${result} - ${value}VP')">Copy</button>`;
+                    if (isConfirmed) {
+                        const confirmedElement = document.createElement('span');
+                        confirmedElement.className = 'confirmed';
+                        confirmedElement.textContent = '✔';
+                        codeElement.appendChild(confirmedElement);
+                    }
+                    codesContainer.appendChild(codeElement);
+                }
+
+                loading.style.display = 'none';
+                codesContainer.style.display = 'block';
+            }, 4500); // Simulates generating delay
+        }
+
+        function copyCode(code) {
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const message = document.getElementById('message');
+            message.textContent = 'Code copied to clipboard!';
+            message.className = 'message success';
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            if (document.body.classList.contains('light-mode')) {
+                themeToggle.textContent = 'Dark Mode';
+                document.body.style.background = 'linear-gradient(135deg, #ece8e1, #b0bec5)';
+                document.body.style.color = '#1c2b39';
+            } else {
+                themeToggle.textContent = 'Light Mode';
+                document.body.style.background = 'linear-gradient(135deg, #0f1923, #1c2b39)';
+                document.body.style.color = '#ece8e1';
+            }
+        });
+
+        function detectTheme() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.remove('light-mode');
+                themeToggle.textContent = 'Light Mode';
+            } else {
+                document.body.classList.add('light-mode');
+                themeToggle.textContent = 'Dark Mode';
+                document.body.style.background = 'linear-gradient(135deg, #ece8e1, #b0bec5)';
+                document.body.style.color = '#1c2b39';
+            }
+        }
+
+        detectTheme();
+
+        window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+            if (e.matches) {
+                document.body.classList.remove('light-mode');
+                themeToggle.textContent = 'Light Mode';
+            } else {
+                document.body.classList.add('light-mode');
+                themeToggle.textContent = 'Dark Mode';
+                document.body.style.background = 'linear-gradient(135deg, #ece8e1, #b0bec5)';
+                document.body.style.color = '#1c2b39';
+            }
+        });
+
+    </script>
+</body>
+</html>
